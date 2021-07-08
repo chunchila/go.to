@@ -14,13 +14,12 @@ public class Site {
 //    UUID uid;
 
     @Id
-    String hash;
-    String person;
-    String url;
+    private String hash;
+    private String person;
+    private String url;
 
     public Site() {
     }
-
 
 
     public String getHash() {

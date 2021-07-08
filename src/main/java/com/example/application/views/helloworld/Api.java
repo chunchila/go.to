@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
+import java.util.Locale;
 import java.util.Random;
-import java.util.Set;
 
 @RestController
 public class Api {
@@ -26,15 +25,14 @@ public class Api {
     @GetMapping("/read")
     public String read() {
 
+
         StringBuilder stringBuilder = new StringBuilder();
-        int counter = 0;
-        Set<String> strings = new HashSet<>();
         for (Site site : sitesRepo.findAll()) {
-            counter++;
-            stringBuilder.append(site.getHash());
-            strings.add(site.getHash());
+
+            stringBuilder.append(site.getHash().toLowerCase(Locale.ROOT).toString() + "\n");
+
         }
-        return "counter " + String.valueOf(counter) + " duplicates " + String.valueOf(counter - strings.size());
+        return stringBuilder.toString();
 
     }
 
