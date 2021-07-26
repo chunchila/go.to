@@ -50,6 +50,7 @@
     "lumo-css-framework": "^4.0.10"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "chokidar": "^3.5.0",
     "compression-webpack-plugin": "4.0.1",
     "construct-style-sheets-polyfill": "2.4.6",
@@ -60,6 +61,7 @@
     "file-loader": "6.1.0",
     "lit-css-loader": "0.0.4",
     "raw-loader": "3.1.0",
+    "rollup-plugin-lit-css": "^2.1.0",
     "ts-loader": "8.0.12",
     "typescript": "4.0.3",
     "webpack": "4.42.0",
@@ -139,6 +141,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "6839ef233a22534c30ea863812f4c5c7fab4d18c896e8c05e2ee7fc91072ae53"
+    "hash": "69d9c242e0d825ba7bcfba00f87334f775b728382a6b459e67a4171a46096068"
   }
 }

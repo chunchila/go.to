@@ -1,5 +1,6 @@
 package com.example.application.views.helloworld;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
-import java.util.Random;
 
 @RestController
 public class Api {
@@ -18,33 +18,30 @@ public class Api {
     @GetMapping("/hash/{hash}")
     public String hash(@PathVariable(required = false) String hash) throws NoSuchAlgorithmException {
 
+        String s = new Site().hashMe(hash);
+        return s;
 
-        return "hash";
     }
 
-    @GetMapping("/read")
+    @GetMapping("/get")
     public String read() {
 
 
         StringBuilder stringBuilder = new StringBuilder();
         for (Site site : sitesRepo.findAll()) {
 
-            stringBuilder.append(site.getHash().toLowerCase(Locale.ROOT).toString() + "\n");
+            stringBuilder.append(site.getUrl() + ":" + site.getHash().toLowerCase(Locale.ROOT).toString() + Strings.LINE_SEPARATOR).append(System.getProperty("line.separator"));
+
 
         }
         return stringBuilder.toString();
 
     }
 
-    @GetMapping("/get")
-    public String get() throws NoSuchAlgorithmException {
+    @GetMapping("/clear")
+    public String clear() {
 
-        for (int i = 0; i < 1E3; i++) {
-            int rand = new Random().nextInt(100);
-            String page = String.valueOf(rand);
-            sitesRepo.save(new Site("www." + page + ".com", page + "-name"));
-        }
-
-        return "saved";
+        sitesRepo.deleteAll();
+        return "cleared";
     }
 }

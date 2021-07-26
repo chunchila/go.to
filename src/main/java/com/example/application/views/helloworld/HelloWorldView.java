@@ -5,21 +5,28 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-@Route(value = "hello", layout = MainLayout.class)
-@RouteAlias(value = "/home", layout = MainLayout.class)
+@Route(value = "home", layout = MainLayout.class)
+@RouteAlias(value = "/", layout = MainLayout.class)
 @PageTitle("Hello World")
 public class HelloWorldView extends VerticalLayout {
 
@@ -54,7 +61,35 @@ public class HelloWorldView extends VerticalLayout {
         grid.addColumn(Site::getPerson);
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        add(horizontalLayout1, horizontalLayout, grid);
+        HorizontalLayout horizontalLayout2 = new HorizontalLayout();
+        MemoryBuffer buffer = new MemoryBuffer();
+        Upload upload = new Upload(buffer);
+        Div output = new Div();
+
+        upload.addSucceededListener(event -> {
+
+
+            try {
+                FileUtils.copyInputStreamToFile(buffer.getInputStream(), new File("uploaded.file"));
+                output.removeAll();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+
+        upload.addFileRejectedListener(event -> {
+            Paragraph component = new Paragraph();
+            output.removeAll();
+//            showOutput(event.getErrorMessage(), component, output);
+        });
+        upload.getElement().addEventListener("file-remove", event -> {
+            output.removeAll();
+        });
+
+        horizontalLayout2.add(upload, output);
+
+        add(horizontalLayout1, horizontalLayout, grid, horizontalLayout2);
 
         //setVerticalComponentAlignment();
         setHorizontalComponentAlignment(Alignment.END, txtUserName);
