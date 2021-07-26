@@ -6,10 +6,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -64,6 +65,12 @@ public class HelloWorldView extends VerticalLayout {
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
+        //upload.setMaxFiles(1);
+        upload.setDropLabel(new Label("Upload kubeconfig file"));
+        upload.setAcceptedFileTypes("application/x-yaml");
+        //upload.setMaxFileSize(300);
+
+
         Div output = new Div();
 
         upload.addSucceededListener(event -> {
@@ -72,6 +79,8 @@ public class HelloWorldView extends VerticalLayout {
             try {
                 FileUtils.copyInputStreamToFile(buffer.getInputStream(), new File("uploaded.file"));
                 output.removeAll();
+                new Notification(
+                        "uploaded file ", 3000).open();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -79,7 +88,16 @@ public class HelloWorldView extends VerticalLayout {
         });
 
         upload.addFileRejectedListener(event -> {
-            Paragraph component = new Paragraph();
+
+
+            Notification notification = new Notification(
+                    "Error Please Select only  kubeconfig yaml", 3000);
+            System.out.println(notification.getThemeNames());
+            //notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
+            notification.open();
+
             output.removeAll();
 //            showOutput(event.getErrorMessage(), component, output);
         });
